@@ -12,84 +12,48 @@ namespace Tests
 {
     public class NewTestScript
     {
-        GameObject plane;
-        GameObject[] wall;
-        GameObject dice;
-
         [SetUp]
         public void setup()
         {
-            plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-            wall = new GameObject[4];
-            for (int i = 0; i < 4; i++)
-            {
-                wall[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                wall[i].name = "wall" + i;
-            }
-            dice = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
-            CreateEnvironment();
-        }
-
-        void CreateEnvironment()
-        {
-            SetPlane(plane);
-            for (int i = 0; i < 4; i++)
-            {
-                SetWall(wall[i], i);
-            }
-            SetDice(dice);
-        }
-        void SetPlane(GameObject obj)
-        {
-            obj.transform.localPosition = Values.plane_pos;
-            //obj.transform.localRotation = Values.plane_rot;
-            obj.transform.localScale = Values.plane_scale;
-        }
-
-        void SetWall(GameObject obj, int index)
-        {
-            switch (index)
-            {
-                case 0:
-                    obj.transform.localPosition = Values.cube1_pos;
-                   // obj.transform.localRotation = Values.cube1_rot;
-                    obj.transform.localScale = Values.cube_scale;
-                    break;
-                case 1:
-                    obj.transform.localPosition = Values.cube2_pos;
-                    //obj.transform.localRotation = Values.cube2_rot;
-                    obj.transform.localScale = Values.cube_scale;
-                    break;
-                case 2:
-                    obj.transform.localPosition = Values.cube3_pos;
-                    obj.transform.localScale = Values.wall3and4;
-                    break;
-                case 3:
-                    obj.transform.localPosition = Values.cube4_pos;
-                    obj.transform.localScale = Values.wall3and4;
-                    break;
-            }
-            obj.GetComponent<Renderer>().material.color = Color.blue;
-            
-        }
-
-        void SetDice(GameObject obj)
-        {
-            obj.name = "dice";
-            obj.transform.position = new Vector3(0f, 3.59f, 0.81f);
-            obj.transform.Rotate(-45f, -50f, 40f);
-            obj.GetComponent<Renderer>().material.color = Color.yellow;
-            //obj.GetComponent<Rigidbody>();
+            SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
         }
 
         [UnityTest]
-        public IEnumerator MoveFront()
+        public IEnumerator CanFindPlayerGameObject()
         {
-        
+            GameObject go = null;
+            go = GameObject.Find("dice");
+            Assert.NotNull(go);
+
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator SampleSceneIsLoaded()
+        {
+            Assert.AreEqual(SceneManager.GetActiveScene().name, "SampleScene");
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator CheckingAddForce()
+        {
+            Vector3 before, after;
+            GameObject dice = GameObject.Find("dice");
+            before = dice.GetComponent<Transform>().position;
+
+            Rigidbody rb;
+
+            rb = dice.GetComponent<Rigidbody>();
+            rb.AddForce(new Vector3(0.0f, -500.0f, 0.0f) * 10);
+
             yield return null;
             yield return null;
-            
+            yield return null;
+            yield return null;
+
+            after = dice.GetComponent<Transform>().position;
+            Assert.AreNotEqual(before, after);
         }
     }
 }
