@@ -15,7 +15,7 @@ public class DiceCheck : MonoBehaviour
 
 	void OnTriggerStay(Collider col)
 	{
-		if (diceVelocity.x == 0f && diceVelocity.y == 0f && diceVelocity.z == 0f)
+		if (diceVelocity.x == 0f && diceVelocity.y == 0f && diceVelocity.z == 0f) 
 		{
 			switch (col.gameObject.name)
 			{
